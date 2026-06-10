@@ -5,401 +5,674 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="주량 다이어리">
+<meta name="apple-mobile-web-app-title" content="음주 다이어리">
 <meta name="theme-color" content="#ffffff">
-<title>주량 다이어리</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<title>음주 다이어리</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#fff;--bg2:#f5f5f4;--bg3:#efefec;
-  --text:#1a1a18;--text2:#6b6b67;--text3:#a5a5a0;
-  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
-  --radius:12px;--radius-sm:8px;
-  --blue:#378ADD;--blue-l:#E6F1FB;--blue-d:#0C447C;
-  --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#085041;
-  --amber-l:#FAEEDA;--amber-d:#633806;
-  --gray-l:#F1EFE8;--gray-d:#444441;
-  --red:#E24B4A;--red-l:#FCEBEB;--red-d:#791F1F;
+  --bg:#F8F7F4;--card:#ffffff;--card2:#F2F1EE;
+  --text:#1C1B18;--text2:#6E6D68;--text3:#B0AFA8;
+  --border:#E8E7E2;
+  --accent:#4A7C59;--accent-l:#E8F2EC;--accent-d:#2D5438;
+  --blue:#4A6FA5;--blue-l:#EAF0FA;
+  --amber:#C4872A;--amber-l:#FDF3E3;
+  --red:#C4504A;--red-l:#FDECEA;
+  --radius:16px;--radius-sm:10px;--radius-xs:8px;
   --sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);
+  --font:"Noto Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
 }
 @media(prefers-color-scheme:dark){:root{
-  --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
-  --text:#f0f0ec;--text2:#a0a09c;--text3:#68685f;
-  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
-  --blue-l:#0c2a4a;--blue-d:#85B7EB;
-  --teal-l:#0a2e22;--teal-d:#5DCAA5;
-  --amber-l:#2e2010;--amber-d:#FAC775;
-  --gray-l:#2c2c2a;--gray-d:#B4B2A9;
-  --red-l:#2a1010;--red-d:#F09595;
+  --bg:#181815;--card:#222220;--card2:#2A2A27;
+  --text:#F0EFE8;--text2:#9A9990;--text3:#5A5955;
+  --border:#333330;
+  --accent:#6AAF80;--accent-l:#1A2E20;--accent-d:#9FCFAF;
+  --blue:#7AA0D0;--blue-l:#1A2030;
+  --amber:#D4A050;--amber-l:#2A2010;
+  --red:#D47070;--red-l:#2A1818;
 }}
-html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Pretendard','Apple SD Gothic Neo',sans-serif;background:var(--bg3);color:var(--text);font-size:16px}
+html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--text);font-size:15px;-webkit-font-smoothing:antialiased}
 .app{display:flex;flex-direction:column;height:100dvh;height:100vh}
-.header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:calc(var(--st) + 12px) 16px 12px;flex-shrink:0}
-.header-title{font-size:17px;font-weight:600}
-.header-sub{font-size:12px;color:var(--text3);margin-top:1px}
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px;padding-bottom:calc(80px + var(--sb))}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:0.5px solid var(--border);display:flex;padding-bottom:var(--sb);z-index:100}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 8px;cursor:pointer;border:none;background:none;color:var(--text3);font-size:10px;transition:color .15s}
-.nav-item i{font-size:22px}
-.nav-item.active{color:var(--blue)}
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:calc(var(--st)+14px) 20px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.header-title{font-size:17px;font-weight:700;letter-spacing:-0.3px}
+.header-btn{width:36px;height:36px;border-radius:50%;background:var(--card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:18px}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(72px + var(--sb))}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;padding-bottom:var(--sb);z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;cursor:pointer;border:none;background:none;color:var(--text3);font-size:10px;font-family:var(--font);font-weight:500;transition:color .15s}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.active{color:var(--accent)}
 .section{display:none}.section.active{display:block}
-.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px}
-.card-title{font-size:14px;font-weight:600;margin-bottom:12px}
-.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.metric{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px}
-.metric-label{font-size:11px;color:var(--text2);margin-bottom:4px}
-.metric-value{font-size:22px;font-weight:600;line-height:1.1}
-.metric-unit{font-size:11px;color:var(--text3)}
-.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.prog-label{font-size:12px;color:var(--text2)}
-.prog-pct{font-size:12px;font-weight:600}
-.prog-bg{background:var(--bg3);border-radius:99px;height:6px;overflow:hidden;margin-bottom:10px}
-.prog-bar{height:6px;border-radius:99px;transition:width .4s ease}
-.alert{padding:10px 12px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.alert-warn{background:var(--amber-l);color:var(--amber-d)}
-.chart-wrap{display:flex;align-items:flex-end;gap:4px;height:72px;margin-top:4px}
-.chart-col{display:flex;flex-direction:column;align-items:center;flex:1}
-.chart-val{font-size:9px;color:var(--text2);margin-bottom:2px;min-height:12px}
-.chart-bar{width:100%;border-radius:3px 3px 0 0;min-height:2px}
-.chart-lbl{font-size:9px;color:var(--text3);margin-top:2px}
-.field-label{display:block;font-size:13px;color:var(--text2);margin-bottom:5px;margin-top:14px;font-weight:500}
-input[type=text],input[type=number],input[type=date],select,textarea{width:100%;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:15px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none}
-textarea{height:72px;resize:none}
-input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+
+/* Calendar */
+.cal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 8px}
+.cal-nav-btn{width:32px;height:32px;border-radius:50%;background:var(--card2);border:none;cursor:pointer;color:var(--text2);font-size:16px;display:flex;align-items:center;justify-content:center}
+.cal-month{font-size:16px;font-weight:700;letter-spacing:-0.3px}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);padding:0 16px;margin-bottom:4px}
+.cal-wd{text-align:center;font-size:11px;font-weight:500;color:var(--text3);padding:4px 0}
+.cal-wd:first-child{color:#C4504A}
+.cal-wd:last-child{color:#4A6FA5}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 16px;gap:2px}
+.cal-cell{display:flex;flex-direction:column;align-items:center;padding:4px 2px;cursor:pointer;border-radius:var(--radius-xs);transition:background .1s;min-height:52px}
+.cal-cell:hover{background:var(--card2)}
+.cal-day{font-size:13px;font-weight:500;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-bottom:2px}
+.cal-cell.today .cal-day{background:var(--accent);color:#fff;font-weight:700}
+.cal-cell.selected .cal-day{background:var(--text);color:var(--bg)}
+.cal-cell.sun .cal-day{color:#C4504A}
+.cal-cell.sat .cal-day{color:#4A6FA5}
+.cal-cell.other .cal-day{color:var(--text3)}
+.cal-dot{width:5px;height:5px;border-radius:50%;margin:1px}
+.cal-emoji{font-size:14px;line-height:1}
+
+/* Selected day card */
+.day-card{margin:8px 16px;background:var(--card);border-radius:var(--radius);padding:14px 16px;border:1px solid var(--border)}
+.day-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.day-card-title{font-size:14px;font-weight:700}
+.day-card-sub{font-size:12px;color:var(--text2)}
+.day-alc-list{display:flex;gap:10px;margin-bottom:10px}
+.alc-chip-big{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--card2);border-radius:var(--radius-xs);padding:8px 12px}
+.alc-chip-big-icon{font-size:22px}
+.alc-chip-big-name{font-size:10px;color:var(--text2)}
+.day-total{font-size:28px;font-weight:700;color:var(--accent);letter-spacing:-1px}
+.day-total-unit{font-size:13px;color:var(--text2);font-weight:400;margin-left:2px}
+.add-btn{display:flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-xs);padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
+
+/* Weekly summary */
+.week-section{padding:0 16px;margin-top:4px}
+.week-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
+.week-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.week-card{background:var(--card);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--border)}
+.week-card-val{font-size:22px;font-weight:700;letter-spacing:-0.5px;color:var(--text)}
+.week-card-unit{font-size:11px;color:var(--text2);font-weight:400}
+.week-card-label{font-size:11px;color:var(--text3);margin-top:2px}
+.week-card-diff{font-size:11px;margin-top:4px;font-weight:500}
+.diff-up{color:var(--red)}
+.diff-down{color:var(--accent)}
+
+/* Mascot message */
+.mascot-card{margin:0 16px 16px;background:var(--accent-l);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;border:1px solid var(--accent)}
+.mascot{font-size:36px;flex-shrink:0}
+.mascot-msg{font-size:13px;color:var(--accent-d);font-weight:500;line-height:1.5}
+.mascot-sub{font-size:11px;color:var(--accent);margin-top:2px}
+
+/* Log form */
+.form-wrap{padding:12px 16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px}
+.card-title{font-size:14px;font-weight:700;margin-bottom:14px;letter-spacing:-0.2px}
+.field-label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;margin-top:14px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px}
+.field-label:first-of-type{margin-top:0}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:10px 12px;font-size:15px;color:var(--text);font-family:var(--font);outline:none;-webkit-appearance:none;appearance:none}
+textarea{height:70px;resize:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);background:var(--bg)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.chip{padding:6px 12px;border:0.5px solid var(--border2);border-radius:99px;font-size:13px;cursor:pointer;background:var(--bg2);color:var(--text2);transition:all .1s;user-select:none}
+.chip{padding:7px 14px;border:1.5px solid var(--border);border-radius:99px;font-size:13px;cursor:pointer;background:var(--card2);color:var(--text2);transition:all .1s;user-select:none;font-family:var(--font);font-weight:500}
 .chip.sel-alc{background:var(--text);color:var(--bg);border-color:var(--text)}
-.chip.sel-snk{background:var(--teal-l);color:var(--teal-d);border-color:var(--teal)}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font-size:15px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);cursor:pointer;font-family:inherit;transition:opacity .1s}
-.btn-primary{background:var(--text);color:var(--bg);border-color:var(--text);width:100%;justify-content:center;padding:14px;font-size:16px;border-radius:var(--radius)}
-.btn-primary:active{opacity:.8}
-.btn-sm{padding:6px 12px;font-size:12px}
-.btn-danger{color:var(--red);border-color:var(--red);background:var(--red-l)}
-.drink-item{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px}
-.drink-item-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
-.drink-date{font-size:14px;font-weight:600}
-.drink-amount{font-size:13px;color:var(--text2)}
-.badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-.badge{font-size:11px;padding:2px 8px;border-radius:99px}
-.badge-blue{background:var(--blue-l);color:var(--blue-d)}
-.badge-teal{background:var(--teal-l);color:var(--teal-d)}
-.badge-amber{background:var(--amber-l);color:var(--amber-d)}
-.badge-gray{background:var(--gray-l);color:var(--gray-d)}
-.drink-note{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4}
-.del-btn{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:2px}
-.filter-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
-.filter-row select{flex:1}
-.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px}
-.toast{position:fixed;bottom:calc(80px + var(--sb) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:99px;font-size:14px;opacity:0;transition:all .25s;pointer-events:none;z-index:200;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.chip.sel-snk{background:var(--accent-l);color:var(--accent-d);border-color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff;border:none;width:100%;justify-content:center;padding:14px;font-size:15px;border-radius:var(--radius-sm);display:flex;align-items:center;gap:6px;cursor:pointer;font-family:var(--font);font-weight:700;letter-spacing:-0.2px}
+.btn-primary:active{opacity:.85}
 .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.history-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.hmetric{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px}
-.hmetric-label{font-size:11px;color:var(--text2)}
-.hmetric-value{font-size:18px;font-weight:600}
-.goal-tabs{display:flex;margin-bottom:16px;border:0.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
-.goal-tab{flex:1;padding:8px;font-size:13px;text-align:center;cursor:pointer;background:var(--bg2);color:var(--text2);border:none;font-family:inherit;transition:all .15s}
-.goal-tab.active{background:var(--text);color:var(--bg);font-weight:500}
+
+/* History */
+.history-wrap{padding:12px 16px}
+.filter-row{display:flex;gap:8px;margin-bottom:12px}
+.filter-row select{flex:1}
+.hist-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.hm{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+.hm-val{font-size:20px;font-weight:700}
+.hm-label{font-size:11px;color:var(--text2);margin-top:2px}
+.drink-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px}
+.di-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.di-date{font-size:14px;font-weight:700;letter-spacing:-0.2px}
+.di-amount{font-size:20px;font-weight:700;color:var(--accent);letter-spacing:-0.5px}
+.di-amount-unit{font-size:12px;color:var(--text2);font-weight:400}
+.badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.badge{font-size:11px;padding:3px 9px;border-radius:99px;font-weight:500}
+.badge-alc{background:var(--blue-l);color:var(--blue)}
+.badge-snk{background:var(--accent-l);color:var(--accent-d)}
+.badge-place{background:var(--card2);color:var(--text2)}
+.badge-ppl{background:var(--amber-l);color:var(--amber)}
+.di-note{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.5}
+.del-btn{background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:4px}
+.empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:14px;line-height:1.8}
+
+/* Settings */
+.settings-wrap{padding:12px 16px}
+.goal-tabs{display:flex;background:var(--card2);border-radius:var(--radius-sm);padding:3px;margin-bottom:16px}
+.goal-tab{flex:1;padding:8px;font-size:13px;text-align:center;cursor:pointer;background:none;color:var(--text2);border:none;font-family:var(--font);font-weight:600;border-radius:var(--radius-xs);transition:all .15s}
+.goal-tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.08)}
 .goal-section{display:none}.goal-section.active{display:block}
-.alc-goal-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border)}
-.alc-goal-row:last-child{border-bottom:none}
-.alc-goal-name{font-size:14px;flex:1}
-.alc-goal-input{width:80px;text-align:center;padding:6px 8px;font-size:14px}
-.alc-goal-unit{font-size:12px;color:var(--text3);white-space:nowrap}
 .month-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.month-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px}
-.month-card-title{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px}
-.month-card input{padding:7px 10px;font-size:14px}
+.month-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+.month-card-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;letter-spacing:0.3px;text-transform:uppercase}
+.month-card input{padding:8px 10px;font-size:14px}
 .month-card .form-row-2{gap:6px}
-.month-card .field-label{font-size:11px;margin-top:6px;margin-bottom:3px}
+.month-card .field-label{font-size:10px;margin-top:6px;margin-bottom:3px}
 .month-card .field-label:first-of-type{margin-top:0}
-.alc-breakdown{display:flex;flex-direction:column;gap:6px;margin-top:4px}
-.alc-row{display:flex;align-items:center;gap:8px}
-.alc-name{font-size:12px;color:var(--text2);width:48px;flex-shrink:0}
-.alc-prog-bg{flex:1;background:var(--bg3);border-radius:99px;height:5px;overflow:hidden}
-.alc-prog-bar{height:5px;border-radius:99px}
-.alc-stat{font-size:11px;color:var(--text3);white-space:nowrap;min-width:60px;text-align:right}
+.alc-goal-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.alc-goal-row:last-child{border-bottom:none}
+.alc-goal-name{font-size:14px;font-weight:500;flex:1}
+.alc-goal-input{width:80px;text-align:center;padding:7px 8px;font-size:14px}
+.alc-goal-unit{font-size:12px;color:var(--text3)}
+.btn-sm{padding:8px 14px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--card2);color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:600}
+.btn-danger{color:var(--red);border-color:var(--red);background:var(--red-l)}
+
+/* Toast */
+.toast{position:fixed;bottom:calc(78px + var(--sb) + 12px);left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);color:var(--bg);padding:10px 22px;border-radius:99px;font-size:13px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:200;white-space:nowrap;font-family:var(--font)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Mood overlay */
+.mood-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:300;display:flex;align-items:flex-end}
+.mood-sheet{background:var(--card);border-radius:var(--radius) var(--radius) 0 0;padding:20px 20px calc(20px + var(--sb));width:100%}
+.mood-title{font-size:15px;font-weight:700;text-align:center;margin-bottom:16px}
+.mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.mood-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;background:var(--card2);border-radius:var(--radius-xs);border:2px solid transparent;cursor:pointer}
+.mood-btn.selected{border-color:var(--accent);background:var(--accent-l)}
+.mood-emoji{font-size:24px}
+.mood-label{font-size:10px;color:var(--text2);font-weight:500}
+.mood-close{width:100%;padding:12px;background:var(--card2);border:none;border-radius:var(--radius-xs);font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;font-family:var(--font)}
+.hidden{display:none!important}
+
+/* Progress bars in settings */
+.prog-wrap{margin-top:8px}
+.prog-row-s{display:flex;justify-content:space-between;margin-bottom:4px}
+.prog-label-s{font-size:12px;color:var(--text2)}
+.prog-val-s{font-size:12px;font-weight:600}
+.prog-bg-s{background:var(--card2);border-radius:99px;height:5px;overflow:hidden;margin-bottom:8px}
+.prog-bar-s{height:5px;border-radius:99px;transition:width .4s}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">
-    <div class="header-title">🍶 주량 다이어리</div>
-    <div class="header-sub" id="hdr-sub"></div>
+    <button class="header-btn" onclick="openMoodPicker()" title="오늘 컨디션">😊</button>
+    <div class="header-title">음주 다이어리</div>
+    <button class="header-btn" onclick="switchTab('log')" title="기록 추가" style="font-size:22px;">＋</button>
   </div>
+
   <div class="content">
-    <div id="sec-dash" class="section active">
-      <div id="dash-alert"></div>
-      <div class="metric-grid">
-        <div class="metric"><div class="metric-label">이달 목표</div><div class="metric-value" id="d-mg">-</div><div class="metric-unit">회</div></div>
-        <div class="metric"><div class="metric-label">이달 술자리</div><div class="metric-value" id="d-mc">0</div><div class="metric-unit">회</div></div>
-        <div class="metric"><div class="metric-label">이달 잔수</div><div class="metric-value" id="d-md">0</div><div class="metric-unit">잔</div></div>
+    <!-- HOME: 캘린더 -->
+    <div id="sec-home" class="section active">
+      <div class="cal-header">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+        <div class="cal-month" id="cal-month-label"></div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
       </div>
-      <div class="card">
-        <div class="card-title">이달 진행률</div>
-        <div class="prog-row"><span class="prog-label">술자리 횟수</span><span class="prog-pct" id="d-pct-mc">-</span></div>
-        <div class="prog-bg"><div class="prog-bar" id="bar-mc" style="width:0%;background:#378ADD"></div></div>
-        <div class="prog-row"><span class="prog-label">총 잔수</span><span class="prog-pct" id="d-pct-md">-</span></div>
-        <div class="prog-bg"><div class="prog-bar" id="bar-md" style="width:0%;background:#1D9E75"></div></div>
+      <div class="cal-weekdays">
+        <div class="cal-wd">일</div><div class="cal-wd">월</div><div class="cal-wd">화</div>
+        <div class="cal-wd">수</div><div class="cal-wd">목</div><div class="cal-wd">금</div><div class="cal-wd">토</div>
       </div>
-      <div class="card">
-        <div class="card-title">주종별 잔수 (올해)</div>
-        <div class="alc-breakdown" id="alc-breakdown"><div style="font-size:13px;color:var(--text3)">기록이 없어요</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title">월별 술자리</div>
-        <div class="chart-wrap" id="monthly-chart"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">최근 기록</div>
-        <div id="recent-list"><div class="empty">아직 기록이 없어요</div></div>
+      <div class="cal-grid" id="cal-grid"></div>
+
+      <div id="day-card-wrap"></div>
+
+      <div class="week-section">
+        <div class="week-title">이번 주 음주 요약</div>
+        <div class="week-grid" id="week-grid"></div>
+        <div class="mascot-card" id="mascot-card">
+          <div class="mascot" id="mascot-emoji">🐢</div>
+          <div>
+            <div class="mascot-msg" id="mascot-msg">이번 주도 잘 하고 있어요!</div>
+            <div class="mascot-sub" id="mascot-sub">조금씩 줄여가는 멋진 당신을 응원해요 💪</div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- LOG FORM -->
     <div id="sec-log" class="section">
-      <div class="card">
-        <div class="card-title">새 기록 추가</div>
-        <label class="field-label">날짜</label>
-        <input type="date" id="log-date">
-        <label class="field-label">술 종류</label>
-        <div class="chips" id="alc-chips">
-          <span class="chip" data-v="소주" onclick="toggleChip(this,'alc')">소주</span>
-          <span class="chip" data-v="맥주" onclick="toggleChip(this,'alc')">맥주</span>
-          <span class="chip" data-v="막걸리" onclick="toggleChip(this,'alc')">막걸리</span>
-          <span class="chip" data-v="와인" onclick="toggleChip(this,'alc')">와인</span>
-          <span class="chip" data-v="위스키" onclick="toggleChip(this,'alc')">위스키</span>
-          <span class="chip" data-v="사케" onclick="toggleChip(this,'alc')">사케</span>
-          <span class="chip" data-v="칵테일" onclick="toggleChip(this,'alc')">칵테일</span>
-          <span class="chip" data-v="기타" onclick="toggleChip(this,'alc')">기타</span>
+      <div class="form-wrap">
+        <div class="card">
+          <div class="card-title">새 기록 추가</div>
+          <label class="field-label">날짜</label>
+          <input type="date" id="log-date">
+          <label class="field-label">술 종류</label>
+          <div class="chips" id="alc-chips">
+            <span class="chip" data-v="🍺 맥주" onclick="toggleChip(this,'alc')">🍺 맥주</span>
+            <span class="chip" data-v="🍶 소주" onclick="toggleChip(this,'alc')">🍶 소주</span>
+            <span class="chip" data-v="🍚 막걸리" onclick="toggleChip(this,'alc')">🍚 막걸리</span>
+            <span class="chip" data-v="🍷 와인" onclick="toggleChip(this,'alc')">🍷 와인</span>
+            <span class="chip" data-v="🥃 위스키" onclick="toggleChip(this,'alc')">🥃 위스키</span>
+            <span class="chip" data-v="🍸 칵테일" onclick="toggleChip(this,'alc')">🍸 칵테일</span>
+            <span class="chip" data-v="기타" onclick="toggleChip(this,'alc')">기타</span>
+          </div>
+          <div class="form-row-2">
+            <div><label class="field-label">총 잔수</label><input type="number" id="log-amount" min="0.5" step="0.5" placeholder="0" inputmode="decimal"></div>
+            <div><label class="field-label">동석 인원</label><input type="number" id="log-people" min="1" step="1" placeholder="명" inputmode="numeric"></div>
+          </div>
+          <label class="field-label">안주</label>
+          <div class="chips" id="snk-chips">
+            <span class="chip" data-v="삼겹살" onclick="toggleChip(this,'snk')">삼겹살</span>
+            <span class="chip" data-v="치킨" onclick="toggleChip(this,'snk')">치킨</span>
+            <span class="chip" data-v="해산물" onclick="toggleChip(this,'snk')">해산물</span>
+            <span class="chip" data-v="두부" onclick="toggleChip(this,'snk')">두부</span>
+            <span class="chip" data-v="김치찌개" onclick="toggleChip(this,'snk')">김치찌개</span>
+            <span class="chip" data-v="마른안주" onclick="toggleChip(this,'snk')">마른안주</span>
+            <span class="chip" data-v="회" onclick="toggleChip(this,'snk')">회</span>
+            <span class="chip" data-v="고기" onclick="toggleChip(this,'snk')">고기</span>
+            <span class="chip" data-v="기타" onclick="toggleChip(this,'snk')">기타</span>
+          </div>
+          <label class="field-label">장소</label>
+          <input type="text" id="log-place" placeholder="예: 강남, 홍대...">
+          <label class="field-label">메모</label>
+          <textarea id="log-note" placeholder="분위기, 느낌, 특이사항..."></textarea>
+          <div style="margin-top:16px">
+            <button class="btn-primary" onclick="saveLog()">✓ 저장하기</button>
+          </div>
         </div>
-        <div class="form-row-2">
-          <div><label class="field-label">총 잔수</label><input type="number" id="log-amount" min="0.5" step="0.5" placeholder="예: 3" inputmode="decimal"></div>
-          <div><label class="field-label">동석 인원</label><input type="number" id="log-people" min="1" step="1" placeholder="예: 4" inputmode="numeric"></div>
-        </div>
-        <label class="field-label">안주</label>
-        <div class="chips" id="snk-chips">
-          <span class="chip" data-v="삼겹살" onclick="toggleChip(this,'snk')">삼겹살</span>
-          <span class="chip" data-v="치킨" onclick="toggleChip(this,'snk')">치킨</span>
-          <span class="chip" data-v="해산물" onclick="toggleChip(this,'snk')">해산물</span>
-          <span class="chip" data-v="두부" onclick="toggleChip(this,'snk')">두부</span>
-          <span class="chip" data-v="김치찌개" onclick="toggleChip(this,'snk')">김치찌개</span>
-          <span class="chip" data-v="마른안주" onclick="toggleChip(this,'snk')">마른안주</span>
-          <span class="chip" data-v="회" onclick="toggleChip(this,'snk')">회</span>
-          <span class="chip" data-v="고기" onclick="toggleChip(this,'snk')">고기</span>
-          <span class="chip" data-v="기타" onclick="toggleChip(this,'snk')">기타</span>
-        </div>
-        <label class="field-label">장소</label>
-        <input type="text" id="log-place" placeholder="예: 강남, 홍대...">
-        <label class="field-label">메모</label>
-        <textarea id="log-note" placeholder="분위기, 느낌, 특이사항..."></textarea>
-        <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveLog()"><i class="ti ti-check"></i> 저장하기</button></div>
       </div>
     </div>
+
+    <!-- HISTORY -->
     <div id="sec-history" class="section">
-      <div class="filter-row">
-        <select id="filter-month" onchange="renderHistory()">
-          <option value="">올해 전체</option>
-          <option value="1">1월</option><option value="2">2월</option><option value="3">3월</option>
-          <option value="4">4월</option><option value="5">5월</option><option value="6">6월</option>
-          <option value="7">7월</option><option value="8">8월</option><option value="9">9월</option>
-          <option value="10">10월</option><option value="11">11월</option><option value="12">12월</option>
-        </select>
+      <div class="history-wrap">
+        <div class="filter-row">
+          <select id="filter-month" onchange="renderHistory()">
+            <option value="">올해 전체</option>
+            <option value="1">1월</option><option value="2">2월</option><option value="3">3월</option>
+            <option value="4">4월</option><option value="5">5월</option><option value="6">6월</option>
+            <option value="7">7월</option><option value="8">8월</option><option value="9">9월</option>
+            <option value="10">10월</option><option value="11">11월</option><option value="12">12월</option>
+          </select>
+        </div>
+        <div class="hist-summary" id="hist-summary"></div>
+        <div id="history-list"></div>
       </div>
-      <div class="history-summary" id="history-summary"></div>
-      <div id="history-list"><div class="empty">기록이 없어요</div></div>
     </div>
+
+    <!-- SETTINGS -->
     <div id="sec-settings" class="section">
-      <div class="card">
-        <div class="card-title">목표 설정</div>
-        <div class="goal-tabs">
-          <button class="goal-tab active" onclick="switchGoalTab('monthly')">월별 목표</button>
-          <button class="goal-tab" onclick="switchGoalTab('alcohol')">주종별 목표</button>
+      <div class="settings-wrap">
+        <div class="card">
+          <div class="card-title">목표 설정</div>
+          <div class="goal-tabs">
+            <button class="goal-tab active" onclick="switchGoalTab('monthly')">월별 목표</button>
+            <button class="goal-tab" onclick="switchGoalTab('alcohol')">주종별 목표</button>
+          </div>
+          <div id="gtab-monthly" class="goal-section active">
+            <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">월마다 술자리 횟수와 잔수 목표를 각각 설정합니다.</p>
+            <div class="month-grid" id="month-goal-grid"></div>
+          </div>
+          <div id="gtab-alcohol" class="goal-section">
+            <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">주종별 연간 목표 잔수를 설정합니다.</p>
+            <div id="alc-goal-list"></div>
+          </div>
+          <div style="margin-top:16px">
+            <button class="btn-primary" onclick="saveGoals()">✓ 목표 저장</button>
+          </div>
         </div>
-        <div id="gtab-monthly" class="goal-section active">
-          <p style="font-size:12px;color:var(--text2);margin-bottom:12px">월마다 술자리 횟수와 잔수 목표를 각각 설정합니다.</p>
-          <div class="month-grid" id="month-goal-grid"></div>
+
+        <div class="card" id="monthly-progress-card">
+          <div class="card-title">이달 목표 진행률</div>
+          <div id="monthly-progress"></div>
         </div>
-        <div id="gtab-alcohol" class="goal-section">
-          <p style="font-size:12px;color:var(--text2);margin-bottom:12px">주종별 연간 목표 잔수를 설정합니다.</p>
-          <div id="alc-goal-list"></div>
+
+        <div class="card">
+          <div class="card-title">데이터 관리</div>
+          <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">데이터는 이 기기의 브라우저에 저장됩니다.</p>
+          <button class="btn-sm btn-danger" onclick="clearAll()">전체 초기화</button>
         </div>
-        <div style="margin-top:16px"><button class="btn btn-primary" onclick="saveGoals()"><i class="ti ti-check"></i> 목표 저장</button></div>
-      </div>
-      <div class="card">
-        <div class="card-title">데이터 관리</div>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px">데이터는 이 기기의 브라우저에 저장됩니다.</p>
-        <button class="btn btn-sm btn-danger" onclick="clearAll()"><i class="ti ti-trash"></i> 전체 초기화</button>
-      </div>
-      <div class="card">
-        <div class="card-title">홈 화면 추가</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.7"><b>iPhone</b> — Safari 공유(□↑) → 홈 화면에 추가<br><b>Android</b> — Chrome 메뉴(⋮) → 앱 설치</p>
+        <div class="card">
+          <div class="card-title">홈 화면 추가</div>
+          <p style="font-size:13px;color:var(--text2);line-height:1.8"><b>iPhone</b> — Safari 공유(□↑) → 홈 화면에 추가<br><b>Android</b> — Chrome 메뉴(⋮) → 앱 설치</p>
+        </div>
       </div>
     </div>
   </div>
+
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchTab('dash')"><i class="ti ti-chart-bar"></i>대시보드</button>
-    <button class="nav-item" onclick="switchTab('log')"><i class="ti ti-plus-circle"></i>기록 추가</button>
-    <button class="nav-item" onclick="switchTab('history')"><i class="ti ti-calendar"></i>기록 목록</button>
-    <button class="nav-item" onclick="switchTab('settings')"><i class="ti ti-settings"></i>설정</button>
+    <button class="nav-item active" onclick="switchTab('home')">
+      <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>홈
+    </button>
+    <button class="nav-item" onclick="switchTab('log')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>기록
+    </button>
+    <button class="nav-item" onclick="switchTab('history')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>기록 목록
+    </button>
+    <button class="nav-item" onclick="switchTab('settings')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>설정
+    </button>
   </nav>
 </div>
+
+<!-- Mood picker -->
+<div class="mood-overlay hidden" id="mood-overlay" onclick="closeMoodPicker(event)">
+  <div class="mood-sheet">
+    <div class="mood-title">오늘 컨디션은?</div>
+    <div class="mood-grid">
+      <div class="mood-btn" onclick="selectMood('😵','많이 힘들어요')"><div class="mood-emoji">😵</div><div class="mood-label">힘들어요</div></div>
+      <div class="mood-btn" onclick="selectMood('😞','별로예요')"><div class="mood-emoji">😞</div><div class="mood-label">별로예요</div></div>
+      <div class="mood-btn" onclick="selectMood('😐','그냥 그래요')"><div class="mood-emoji">😐</div><div class="mood-label">보통이에요</div></div>
+      <div class="mood-btn" onclick="selectMood('😊','좋아요')"><div class="mood-emoji">😊</div><div class="mood-label">좋아요</div></div>
+      <div class="mood-btn" onclick="selectMood('🤩','아주 좋아요')"><div class="mood-emoji">🤩</div><div class="mood-label">최고예요</div></div>
+    </div>
+    <button class="mood-close" onclick="closeMoodPicker()">닫기</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
 <script>
-const ALC_LIST=['소주','맥주','막걸리','와인','위스키','사케','칵테일','기타'];
-const MONTHS=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-const LKEY={logs:'dklogs_v2',goals:'dkgoals_v2'};
-let logs=[],goals={monthly:{},alcohol:{}};
+const ALC_LIST=["🍺 맥주","🍶 소주","🍚 막걸리","🍷 와인","🥃 위스키","🍸 칵테일","기타"];
+const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+const WEEKDAYS=["일","월","화","수","목","금","토"];
+const LKEY={logs:"ddlogs_v3",goals:"ddgoals_v3",mood:"ddmood_v3"};
+let logs=[],goals={monthly:{},alcohol:{}},moods={};
 let selAlc=[],selSnk=[];
-const TABS=['dash','log','history','settings'];
+let calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
+let selectedDate=today();
+const TABS=["home","log","history","settings"];
+
 function load(){
   try{const v=localStorage.getItem(LKEY.logs);if(v)logs=JSON.parse(v)}catch(e){}
   try{const v=localStorage.getItem(LKEY.goals);if(v)goals=JSON.parse(v)}catch(e){}
+  try{const v=localStorage.getItem(LKEY.mood);if(v)moods=JSON.parse(v)}catch(e){}
   if(!goals.monthly)goals.monthly={};
   if(!goals.alcohol)goals.alcohol={};
 }
 function persist(){
   localStorage.setItem(LKEY.logs,JSON.stringify(logs));
   localStorage.setItem(LKEY.goals,JSON.stringify(goals));
+  localStorage.setItem(LKEY.mood,JSON.stringify(moods));
 }
+function today(){return new Date().toISOString().slice(0,10)}
+function fmtAmt(v){return v%1===0?String(v):v.toFixed(1)}
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
 function switchTab(name){
   TABS.forEach((t,i)=>{
-    document.getElementById('sec-'+t).classList.toggle('active',t===name);
-    document.querySelectorAll('.nav-item')[i].classList.toggle('active',t===name);
+    document.getElementById("sec-"+t).classList.toggle("active",t===name);
+    document.querySelectorAll(".nav-item")[i].classList.toggle("active",t===name);
   });
-  if(name==='dash')renderDash();
-  if(name==='history')renderHistory();
-  if(name==='settings')loadGoalForm();
-  document.querySelector('.content').scrollTop=0;
+  if(name==="home")renderHome();
+  if(name==="history")renderHistory();
+  if(name==="settings")loadSettingsForm();
+  document.querySelector(".content").scrollTop=0;
 }
+
 function switchGoalTab(name){
-  document.querySelectorAll('.goal-tab').forEach((t,i)=>t.classList.toggle('active',['monthly','alcohol'][i]===name));
-  document.getElementById('gtab-monthly').classList.toggle('active',name==='monthly');
-  document.getElementById('gtab-alcohol').classList.toggle('active',name==='alcohol');
+  document.querySelectorAll(".goal-tab").forEach((t,i)=>t.classList.toggle("active",["monthly","alcohol"][i]===name));
+  document.getElementById("gtab-monthly").classList.toggle("active",name==="monthly");
+  document.getElementById("gtab-alcohol").classList.toggle("active",name==="alcohol");
 }
+
+function changeMonth(d){
+  calMonth+=d;
+  if(calMonth>11){calMonth=0;calYear++}
+  if(calMonth<0){calMonth=11;calYear--}
+  renderCalendar();
+}
+
+function drinkEmoji(amount){
+  if(!amount)return "";
+  if(amount<=1)return "😊";
+  if(amount<=3)return "🙂";
+  if(amount<=5)return "😅";
+  if(amount<=8)return "😵";
+  return "🤯";
+}
+
+function renderCalendar(){
+  document.getElementById("cal-month-label").textContent=calYear+"년 "+MONTHS[calMonth];
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const logMap={};
+  logs.forEach(l=>{if(l.date)logMap[l.date]=(logMap[l.date]||0)+(l.amount||0)});
+  const todayStr=today();
+  let html="";
+  for(let i=0;i<first;i++){
+    const d=new Date(calYear,calMonth,-(first-1-i));
+    html+=`<div class="cal-cell other"><div class="cal-day">${d.getDate()}</div></div>`;
+  }
+  for(let d=1;d<=days;d++){
+    const ds=calYear+"-"+String(calMonth+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    const dow=new Date(calYear,calMonth,d).getDay();
+    const isToday=ds===todayStr;
+    const isSel=ds===selectedDate;
+    const amt=logMap[ds];
+    const cls=["cal-cell",isToday&&!isSel?"today":"",isSel?"selected":"",dow===0?"sun":"",dow===6?"sat":""].filter(Boolean).join(" ");
+    const dot=amt?`<div class="cal-dot" style="background:${amt>5?"#C4504A":amt>3?"#C4872A":"#4A7C59"}"></div>`:"";
+    const emoji=amt?`<div class="cal-emoji">${drinkEmoji(amt)}</div>`:dot?"":' ';
+    html+=`<div class="${cls}" onclick="selectDate('${ds}')"><div class="cal-day">${d}</div>${amt?`<div class="cal-emoji">${drinkEmoji(amt)}</div>`:"<div style='height:18px'></div>"}</div>`;
+  }
+  const remain=(7-((first+days)%7))%7;
+  for(let i=1;i<=remain;i++){
+    html+=`<div class="cal-cell other"><div class="cal-day">${i}</div></div>`;
+  }
+  document.getElementById("cal-grid").innerHTML=html;
+}
+
+function selectDate(ds){
+  selectedDate=ds;
+  renderCalendar();
+  renderDayCard();
+}
+
+function renderDayCard(){
+  const wrap=document.getElementById("day-card-wrap");
+  const dayLogs=logs.filter(l=>l.date===selectedDate);
+  const d=new Date(selectedDate);
+  const dayStr=selectedDate.slice(5).replace("-","월 ")+"일 ("+WEEKDAYS[d.getDay()]+")";
+  const mood=moods[selectedDate];
+  if(!dayLogs.length){
+    wrap.innerHTML=`<div class="day-card">
+      <div class="day-card-header">
+        <div>
+          <div class="day-card-title">${dayStr}</div>
+          <div class="day-card-sub">기록 없음 ${mood?mood.emoji:""}</div>
+        </div>
+        <button class="add-btn" onclick="goLogDate('${selectedDate}')">＋ 기록 추가</button>
+      </div>
+    </div>`;
+    return;
+  }
+  const total=dayLogs.reduce((s,l)=>s+(l.amount||0),0);
+  const allAlc=[...new Set(dayLogs.flatMap(l=>l.alcohol||[]))];
+  const alcIcons={"🍺 맥주":"🍺","🍶 소주":"🍶","🍚 막걸리":"🍚","🍷 와인":"🍷","🥃 위스키":"🥃","🍸 칵테일":"🍸","기타":"🥂"};
+  const alcHTML=allAlc.map(a=>`<div class="alc-chip-big"><div class="alc-chip-big-icon">${alcIcons[a]||"🥂"}</div><div class="alc-chip-big-name">${a.replace(/^[^\s]+\s/,"")}</div></div>`).join("");
+  wrap.innerHTML=`<div class="day-card">
+    <div class="day-card-header">
+      <div><div class="day-card-title">${dayStr} ${mood?mood.emoji:""}</div><div class="day-card-sub">기록한 술</div></div>
+      <div style="text-align:right"><div class="day-total">${fmtAmt(total)}<span class="day-total-unit">잔</span></div><div style="font-size:11px;color:var(--text3)">총 음주량</div></div>
+    </div>
+    <div class="day-alc-list">${alcHTML}</div>
+    <button class="add-btn" onclick="goLogDate('${selectedDate}')">＋ 추가 기록</button>
+  </div>`;
+}
+
+function goLogDate(ds){
+  document.getElementById("log-date").value=ds;
+  switchTab("log");
+}
+
+function getWeekLogs(){
+  const now=new Date();
+  const dow=now.getDay();
+  const mon=new Date(now);mon.setDate(now.getDate()-dow);
+  const sun=new Date(now);sun.setDate(now.getDate()+(6-dow));
+  const monStr=mon.toISOString().slice(0,10);
+  const sunStr=sun.toISOString().slice(0,10);
+  return logs.filter(l=>l.date>=monStr&&l.date<=sunStr);
+}
+function getPrevWeekLogs(){
+  const now=new Date();
+  const dow=now.getDay();
+  const pSun=new Date(now);pSun.setDate(now.getDate()-dow-1);
+  const pMon=new Date(pSun);pMon.setDate(pSun.getDate()-6);
+  const monStr=pMon.toISOString().slice(0,10);
+  const sunStr=pSun.toISOString().slice(0,10);
+  return logs.filter(l=>l.date>=monStr&&l.date<=sunStr);
+}
+
+function renderWeekSummary(){
+  const wl=getWeekLogs();
+  const pwl=getPrevWeekLogs();
+  const total=wl.reduce((s,l)=>s+(l.amount||0),0);
+  const prevTotal=pwl.reduce((s,l)=>s+(l.amount||0),0);
+  const days=[...new Set(wl.map(l=>l.date))].length;
+  const prevDays=[...new Set(pwl.map(l=>l.date))].length;
+  const maxDay=wl.length?Math.max(...wl.map(l=>l.amount||0)):0;
+  const prevMax=pwl.length?Math.max(...pwl.map(l=>l.amount||0)):0;
+  const diffTotal=total-prevTotal;
+  const diffDays=days-prevDays;
+  const diffMax=maxDay-prevMax;
+  function diffHTML(v,unit){
+    if(v===0)return `<div class="week-card-diff" style="color:var(--text3)">지난주와 동일</div>`;
+    const cls=v>0?"diff-up":"diff-down";
+    return `<div class="week-card-diff ${cls}">${v>0?"▲":"▼"} ${Math.abs(v).toFixed(v%1?1:0)}${unit} vs 지난주</div>`;
+  }
+  document.getElementById("week-grid").innerHTML=`
+    <div class="week-card"><div class="week-card-val">${fmtAmt(total)}<span class="week-card-unit">잔</span></div><div class="week-card-label">총 음주량</div>${diffHTML(diffTotal,"잔")}</div>
+    <div class="week-card"><div class="week-card-val">${days}<span class="week-card-unit">일</span></div><div class="week-card-label">음주한 날</div>${diffHTML(diffDays,"일")}</div>
+    <div class="week-card"><div class="week-card-val">${fmtAmt(maxDay)}<span class="week-card-unit">잔</span></div><div class="week-card-label">최다 음주</div>${diffHTML(diffMax,"잔")}</div>`;
+
+  const mc=document.getElementById("mascot-card");
+  const me=document.getElementById("mascot-emoji");
+  const mm=document.getElementById("mascot-msg");
+  const ms=document.getElementById("mascot-sub");
+  if(total===0){me.textContent="🐢";mm.textContent="이번 주 절주 완벽해요!";ms.textContent="이 페이스를 유지해 봐요 🎉"}
+  else if(diffTotal<0){me.textContent="😊";mm.textContent="지난주보다 줄었어요!";ms.textContent="조금씩 줄여가는 멋진 당신을 응원해요 💪"}
+  else if(diffTotal===0){me.textContent="😐";mm.textContent="지난주와 비슷한 한 주네요.";ms.textContent="다음 주엔 조금 더 줄여볼까요?"}
+  else{me.textContent="😅";mm.textContent="이번 주 좀 무리했나요?";ms.textContent="몸을 챙기며 조절해 봐요 🌿"}
+}
+
+function renderHome(){
+  renderCalendar();
+  renderDayCard();
+  renderWeekSummary();
+}
+
 function toggleChip(el,type){
-  const v=el.dataset.v,arr=type==='alc'?selAlc:selSnk,cls=type==='alc'?'sel-alc':'sel-snk';
+  const v=el.dataset.v,arr=type==="alc"?selAlc:selSnk,cls=type==="alc"?"sel-alc":"sel-snk";
   if(arr.includes(v)){arr.splice(arr.indexOf(v),1);el.classList.remove(cls)}
   else{arr.push(v);el.classList.add(cls)}
 }
-function today(){return new Date().toISOString().slice(0,10)}
-function fmtAmt(v){return v%1===0?v:v.toFixed(1)}
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
-}
+
 function saveLog(){
-  const date=document.getElementById('log-date').value||today();
-  const amount=parseFloat(document.getElementById('log-amount').value);
-  const people=parseInt(document.getElementById('log-people').value)||null;
-  const place=document.getElementById('log-place').value.trim();
-  const note=document.getElementById('log-note').value.trim();
-  if(!amount||amount<=0){toast('잔수를 입력해 주세요');return}
-  if(!selAlc.length){toast('술 종류를 선택해 주세요');return}
+  const date=document.getElementById("log-date").value||today();
+  const amount=parseFloat(document.getElementById("log-amount").value);
+  const people=parseInt(document.getElementById("log-people").value)||null;
+  const place=document.getElementById("log-place").value.trim();
+  const note=document.getElementById("log-note").value.trim();
+  if(!amount||amount<=0){toast("잔수를 입력해 주세요");return}
+  if(!selAlc.length){toast("술 종류를 선택해 주세요");return}
   logs.unshift({id:Date.now(),date,alcohol:[...selAlc],amount,people,snacks:[...selSnk],place,note});
   persist();
-  ['log-date','log-amount','log-people','log-place','log-note'].forEach(id=>document.getElementById(id).value='');
+  ["log-date","log-amount","log-people","log-place","log-note"].forEach(id=>document.getElementById(id).value="");
   selAlc=[];selSnk=[];
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel-alc','sel-snk'));
-  document.getElementById('log-date').value=today();
-  toast('저장되었습니다');
-  setTimeout(()=>switchTab('dash'),600);
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("sel-alc","sel-snk"));
+  document.getElementById("log-date").value=today();
+  selectedDate=date;
+  toast("저장되었습니다");
+  setTimeout(()=>switchTab("home"),500);
 }
+
 function yrLogs(){const yr=new Date().getFullYear().toString();return logs.filter(l=>l.date.startsWith(yr))}
-function moLogs(m){const yr=new Date().getFullYear().toString();const mm=String(m).padStart(2,'0');return logs.filter(l=>l.date.startsWith(yr+'-'+mm))}
-function renderDash(){
-  const now=new Date();const curM=now.getMonth()+1;
-  const ml=moLogs(curM);const mc=ml.length;
-  const md=ml.reduce((s,l)=>s+(l.amount||0),0);
-  const mg=goals.monthly[curM];
-  document.getElementById('d-mg').textContent=mg&&mg.count?mg.count:'-';
-  document.getElementById('d-mc').textContent=mc;
-  document.getElementById('d-md').textContent=fmtAmt(md);
-  document.getElementById('hdr-sub').textContent=now.getFullYear()+'년 '+MONTHS[curM-1];
-  const pctMC=mg&&mg.count?Math.min(100,Math.round(mc/mg.count*100)):null;
-  const pctMD=mg&&mg.drinks?Math.min(100,Math.round(md/mg.drinks*100)):null;
-  document.getElementById('d-pct-mc').textContent=pctMC!=null?pctMC+'%':'목표 미설정';
-  document.getElementById('d-pct-md').textContent=pctMD!=null?pctMD+'%':'목표 미설정';
-  document.getElementById('bar-mc').style.width=(pctMC??0)+'%';
-  document.getElementById('bar-md').style.width=(pctMD??0)+'%';
-  const al=document.getElementById('dash-alert');
-  if(pctMC!=null&&pctMC>=90)al.innerHTML='<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i> 이달 술자리 목표의 '+pctMC+'%에 도달했어요!</div>';
-  else al.innerHTML='';
-  const yl=yrLogs();const alcTotals={};
-  yl.forEach(l=>{(l.alcohol||[]).forEach(a=>{const share=l.amount/(l.alcohol.length||1);alcTotals[a]=(alcTotals[a]||0)+share})});
-  const alcEntries=Object.entries(alcTotals).sort((a,b)=>b[1]-a[1]);
-  const maxAlc=alcEntries.length?alcEntries[0][1]:1;
-  const bd=document.getElementById('alc-breakdown');
-  if(!alcEntries.length){bd.innerHTML='<div style="font-size:13px;color:var(--text3)">기록이 없어요</div>'}
-  else{bd.innerHTML=alcEntries.map(([name,total])=>{
-    const goal=goals.alcohol[name];const pct=Math.round((total/maxAlc)*100);
-    const over=goal&&total>goal;const barColor=over?'#E24B4A':'#378ADD';
-    const goalTxt=goal?' / 목표 '+goal+'잔':'';
-    const overTxt=over?' <span style="color:#E24B4A;font-size:10px">초과</span>':'';
-    return '<div class="alc-row"><span class="alc-name">'+name+'</span><div class="alc-prog-bg"><div class="alc-prog-bar" style="width:'+pct+'%;background:'+barColor+'"></div></div><span class="alc-stat">'+fmtAmt(total)+'잔'+goalTxt+overTxt+'</span></div>';
-  }).join('')}
-  const months=Array(12).fill(0);
-  yl.forEach(l=>{months[parseInt(l.date.slice(5,7))-1]++});
-  const maxM=Math.max(...months,1);const nowM=now.getMonth();
-  document.getElementById('monthly-chart').innerHTML=months.map((v,i)=>{
-    const h=Math.max(2,Math.round((v/maxM)*64));
-    const hasGoal=goals.monthly[i+1]&&goals.monthly[i+1].count;
-    const over=hasGoal&&v>goals.monthly[i+1].count;
-    return '<div class="chart-col"><div class="chart-val">'+(v>0?v:'')+'</div><div class="chart-bar" style="height:'+h+'px;background:'+(over?'#E24B4A':i===nowM?'#1D9E75':'#B5D4F4')+'"></div><div class="chart-lbl">'+(i+1)+'</div></div>';
-  }).join('');
-  const recent=yl.slice(0,3);
-  document.getElementById('recent-list').innerHTML=recent.length?recent.map(l=>itemHTML(l,false)).join(''):'<div class="empty">아직 기록이 없어요</div>';
-}
+
 function itemHTML(l,showDel){
-  const alcB=(l.alcohol||[]).map(a=>'<span class="badge badge-blue">'+a+'</span>').join('');
-  const snkB=(l.snacks||[]).map(s=>'<span class="badge badge-teal">'+s+'</span>').join('');
-  const plcB=l.place?'<span class="badge badge-gray">'+l.place+'</span>':'';
-  const pepB=l.people?'<span class="badge badge-amber">'+l.people+'명</span>':'';
-  return '<div class="drink-item"><div class="drink-item-header"><div><div class="drink-date">'+l.date+'</div><div class="drink-amount">'+fmtAmt(l.amount)+'잔</div></div>'+(showDel?'<button class="del-btn" onclick="deleteLog('+l.id+')"><i class="ti ti-trash"></i></button>':'')+'</div><div class="badges">'+alcB+snkB+plcB+pepB+'</div>'+(l.note?'<div class="drink-note">'+l.note+'</div>':'')+'</div>';
+  const alcB=(l.alcohol||[]).map(a=>`<span class="badge badge-alc">${a}</span>`).join("");
+  const snkB=(l.snacks||[]).map(s=>`<span class="badge badge-snk">${s}</span>`).join("");
+  const plcB=l.place?`<span class="badge badge-place">${l.place}</span>`:"";
+  const pepB=l.people?`<span class="badge badge-ppl">${l.people}명</span>`:"";
+  return `<div class="drink-item">
+    <div class="di-header">
+      <div><div class="di-date">${l.date}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${(l.alcohol||[]).join(", ")}</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="text-align:right"><span class="di-amount">${fmtAmt(l.amount)}</span><span class="di-amount-unit">잔</span></div>
+        ${showDel?`<button class="del-btn" onclick="deleteLog(${l.id})">✕</button>`:""}
+      </div>
+    </div>
+    <div class="badges">${alcB}${snkB}${plcB}${pepB}</div>
+    ${l.note?`<div class="di-note">${l.note}</div>`:""}
+  </div>`;
 }
+
 function renderHistory(){
-  const mf=document.getElementById('filter-month').value;
+  const mf=document.getElementById("filter-month").value;
   const yr=new Date().getFullYear().toString();
   let items=logs.filter(l=>l.date.startsWith(yr));
   if(mf)items=items.filter(l=>parseInt(l.date.slice(5,7))===parseInt(mf));
   const totalD=items.reduce((s,l)=>s+(l.amount||0),0);
-  document.getElementById('history-summary').innerHTML=items.length?'<div class="hmetric"><div class="hmetric-label">술자리 횟수</div><div class="hmetric-value">'+items.length+'회</div></div><div class="hmetric"><div class="hmetric-label">총 잔수</div><div class="hmetric-value">'+fmtAmt(totalD)+'잔</div></div>':'';
-  document.getElementById('history-list').innerHTML=items.length?items.map(l=>itemHTML(l,true)).join(''):'<div class="empty">기록이 없어요</div>';
+  document.getElementById("hist-summary").innerHTML=items.length?`
+    <div class="hm"><div class="hm-val">${items.length}회</div><div class="hm-label">술자리 횟수</div></div>
+    <div class="hm"><div class="hm-val">${fmtAmt(totalD)}잔</div><div class="hm-label">총 잔수</div></div>`:"";
+  document.getElementById("history-list").innerHTML=items.length?items.map(l=>itemHTML(l,true)).join(""):`<div class="empty">기록이 없어요<br>홈에서 오늘 음주를<br>기록해 보세요 🍺</div>`;
 }
+
 function deleteLog(id){
-  if(!confirm('이 기록을 삭제할까요?'))return;
+  if(!confirm("이 기록을 삭제할까요?"))return;
   logs=logs.filter(l=>l.id!==id);persist();renderHistory();
 }
-function loadGoalForm(){
-  const grid=document.getElementById('month-goal-grid');
+
+function loadSettingsForm(){
+  const grid=document.getElementById("month-goal-grid");
   grid.innerHTML=Array.from({length:12},(_,i)=>{
     const m=i+1,g=goals.monthly[m]||{};
-    return '<div class="month-card"><div class="month-card-title">'+MONTHS[i]+'</div><div class="form-row-2"><div><label class="field-label">횟수</label><input type="number" id="mg-c-'+m+'" value="'+(g.count||'')+'" min="0" inputmode="numeric" placeholder="회"></div><div><label class="field-label">잔수</label><input type="number" id="mg-d-'+m+'" value="'+(g.drinks||'')+'" min="0" inputmode="numeric" placeholder="잔"></div></div></div>';
-  }).join('');
-  const alcList=document.getElementById('alc-goal-list');
-  alcList.innerHTML=ALC_LIST.map(a=>{
-    const g=goals.alcohol[a]||'';
-    return '<div class="alc-goal-row"><span class="alc-goal-name">'+a+'</span><input type="number" class="alc-goal-input" id="ag-'+a+'" value="'+g+'" min="0" inputmode="numeric" placeholder="0"><span class="alc-goal-unit">잔/년</span></div>';
-  }).join('');
+    return `<div class="month-card"><div class="month-card-title">${MONTHS[i]}</div><div class="form-row-2"><div><label class="field-label">횟수</label><input type="number" id="mg-c-${m}" value="${g.count||""}" min="0" inputmode="numeric" placeholder="회"></div><div><label class="field-label">잔수</label><input type="number" id="mg-d-${m}" value="${g.drinks||""}" min="0" inputmode="numeric" placeholder="잔"></div></div></div>`;
+  }).join("");
+  const alcList=document.getElementById("alc-goal-list");
+  alcList.innerHTML=ALC_LIST.map(a=>`<div class="alc-goal-row"><span class="alc-goal-name">${a}</span><input type="number" class="alc-goal-input" id="ag-${a.replace(/[^a-z가-힣]/gi,"")}" value="${goals.alcohol[a]||""}" min="0" inputmode="numeric" placeholder="0"><span class="alc-goal-unit">잔/년</span></div>`).join("");
+  renderMonthlyProgress();
 }
+
+function renderMonthlyProgress(){
+  const now=new Date();const curM=now.getMonth()+1;
+  const yr=now.getFullYear().toString();const mm=String(curM).padStart(2,"0");
+  const ml=logs.filter(l=>l.date.startsWith(yr+"-"+mm));
+  const mc=ml.length,md=ml.reduce((s,l)=>s+(l.amount||0),0);
+  const mg=goals.monthly[curM];
+  const el=document.getElementById("monthly-progress");
+  if(!mg||(!mg.count&&!mg.drinks)){el.innerHTML=`<p style="font-size:13px;color:var(--text3)">이달 목표가 설정되지 않았어요.</p>`;return}
+  let html="";
+  if(mg.count){const p=Math.min(100,Math.round(mc/mg.count*100));html+=`<div class="prog-row-s"><span class="prog-label-s">술자리 횟수</span><span class="prog-val-s">${mc} / ${mg.count}회 (${p}%)</span></div><div class="prog-bg-s"><div class="prog-bar-s" style="width:${p}%;background:${p>=90?"#C4504A":"#4A7C59"}"></div></div>`}
+  if(mg.drinks){const p=Math.min(100,Math.round(md/mg.drinks*100));html+=`<div class="prog-row-s"><span class="prog-label-s">총 잔수</span><span class="prog-val-s">${fmtAmt(md)} / ${mg.drinks}잔 (${p}%)</span></div><div class="prog-bg-s"><div class="prog-bar-s" style="width:${p}%;background:${p>=90?"#C4504A":"#4A6FA5"}"></div></div>`}
+  el.innerHTML=html;
+}
+
 function saveGoals(){
   for(let m=1;m<=12;m++){
-    const c=parseInt(document.getElementById('mg-c-'+m)?.value)||null;
-    const d=parseInt(document.getElementById('mg-d-'+m)?.value)||null;
+    const c=parseInt(document.getElementById("mg-c-"+m)?.value)||null;
+    const d=parseInt(document.getElementById("mg-d-"+m)?.value)||null;
     if(c||d)goals.monthly[m]={count:c,drinks:d};else delete goals.monthly[m];
   }
   ALC_LIST.forEach(a=>{
-    const v=parseInt(document.getElementById('ag-'+a)?.value)||null;
+    const id="ag-"+a.replace(/[^a-z가-힣]/gi,"");
+    const v=parseInt(document.getElementById(id)?.value)||null;
     if(v)goals.alcohol[a]=v;else delete goals.alcohol[a];
   });
-  persist();toast('목표가 저장되었습니다');renderDash();
+  persist();toast("목표가 저장되었습니다");renderMonthlyProgress();
 }
+
 function clearAll(){
-  if(!confirm('모든 기록과 목표를 초기화할까요?'))return;
-  logs=[];goals={monthly:{},alcohol:{}};persist();renderDash();toast('초기화되었습니다');
+  if(!confirm("모든 기록과 목표를 초기화할까요?"))return;
+  logs=[];goals={monthly:{},alcohol:{}};moods={};persist();
+  renderHome();toast("초기화되었습니다");
 }
-document.getElementById('log-date').value=today();
-load();renderDash();
+
+function openMoodPicker(){document.getElementById("mood-overlay").classList.remove("hidden")}
+function closeMoodPicker(e){
+  if(!e||e.target===document.getElementById("mood-overlay"))
+    document.getElementById("mood-overlay").classList.add("hidden");
+}
+function selectMood(emoji,label){
+  moods[today()]={emoji,label};persist();
+  document.querySelector(".header-btn").textContent=emoji;
+  document.getElementById("mood-overlay").classList.add("hidden");
+  toast("컨디션 기록 완료!");
+  renderDayCard();
+}
+
+document.getElementById("log-date").value=today();
+const todayMood=moods[today()];
+if(todayMood)document.querySelector(".header-btn").textContent=todayMood.emoji;
+load();
+const todayMood2=moods[today()];
+if(todayMood2)document.querySelector(".header-btn").textContent=todayMood2.emoji;
+renderHome();
 </script>
 </body>
 </html>
