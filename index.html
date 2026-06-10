@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="주량 다이어리">
+<meta name="theme-color" content="#ffffff">
+<title>주량 다이어리</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f4;
+    --bg3: #efefec;
+    --text: #1a1a18;
+    --text2: #6b6b67;
+    --text3: #a5a5a0;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.22);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --blue: #378ADD;
+    --blue-light: #E6F1FB;
+    --blue-dark: #0C447C;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-dark: #085041;
+    --amber-light: #FAEEDA;
+    --amber-dark: #633806;
+    --gray-light: #F1EFE8;
+    --gray-dark: #444441;
+    --danger: #E24B4A;
+    --danger-light: #FCEBEB;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252523;
+      --bg3: #2e2e2b;
+      --text: #f0f0ec;
+      --text2: #a0a09c;
+      --text3: #68685f;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.2);
+      --blue-light: #0c2a4a;
+      --blue-dark: #85B7EB;
+      --teal-light: #0a2e22;
+      --teal-dark: #5DCAA5;
+      --amber-light: #2e2010;
+      --amber-dark: #FAC775;
+      --gray-light: #2c2c2a;
+      --gray-dark: #B4B2A9;
+      --danger-light: #2a1010;
+    }
+  }
+  html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', sans-serif; background: var(--bg3); color: var(--text); font-size: 16px; }
+  .app { display: flex; flex-direction: column; height: 100dvh; height: 100vh; }
+  .header { background: var(--bg); border-bottom: 0.5px solid var(--border); padding: calc(var(--safe-top) + 12px) 16px 12px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+  .header-title { font-size: 17px; font-weight: 600; color: var(--text); }
+  .header-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+  .header-year { font-size: 12px; color: var(--text3); }
+  .content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px 16px; padding-bottom: calc(80px + var(--safe-bottom)); }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 0.5px solid var(--border); display: flex; padding-bottom: var(--safe-bottom); z-index: 100; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 4px 8px; cursor: pointer; border: none; background: none; color: var(--text3); font-size: 10px; transition: color 0.15s; }
+  .nav-item i { font-size: 22px; }
+  .nav-item.active { color: var(--blue); }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Cards */
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+
+  /* Metrics */
+  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .metric { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
+  .metric-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+  .metric-value { font-size: 22px; font-weight: 600; color: var(--text); line-height: 1.1; }
+  .metric-unit { font-size: 11px; color: var(--text3); }
+
+  /* Progress */
+  .prog-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .prog-label { font-size: 12px; color: var(--text2); }
+  .prog-pct { font-size: 12px; font-weight: 600; color: var(--text); }
+  .prog-bar-bg { background: var(--bg3); border-radius: 99px; height: 6px; overflow: hidden; margin-bottom: 10px; }
+  .prog-bar { height: 6px; border-radius: 99px; transition: width 0.4s ease; }
+
+  /* Alert */
+  .alert { padding: 10px 12px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .alert-warn { background: var(--amber-light); color: var(--amber-dark); }
+  .alert-ok { background: var(--teal-light); color: var(--teal-dark); }
+
+  /* Chart */
+  .chart-wrap { display: flex; align-items: flex-end; gap: 4px; height: 72px; margin-top: 4px; }
+  .chart-col { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .chart-val { font-size: 9px; color: var(--text2); margin-bottom: 2px; min-height: 12px; }
+  .chart-bar { width: 100%; border-radius: 3px 3px 0 0; min-height: 2px; }
+  .chart-lbl { font-size: 9px; color: var(--text3); margin-top: 2px; }
+
+  /* Form */
+  .field-label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 5px; margin-top: 14px; font-weight: 500; }
+  .field-label:first-of-type { margin-top: 0; }
+  input[type=text], input[type=number], input[type=date], select, textarea {
+    width: 100%; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 10px 12px; font-size: 15px; color: var(--text); font-family: inherit; outline: none;
+    -webkit-appearance: none; appearance: none;
+  }
+  input[type=date] { -webkit-appearance: none; }
+  textarea { height: 72px; resize: none; }
+  input:focus, select:focus, textarea:focus { border-color: var(--blue); }
+
+  /* Chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .chip { padding: 6px 12px; border: 0.5px solid var(--border2); border-radius: 99px; font-size: 13px; cursor: pointer; background: var(--bg2); color: var(--text2); transition: all 0.1s; user-select: none; }
+  .chip.selected-alc { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .chip.selected-snk { background: var(--teal-light); color: var(--teal-dark); border-color: var(--teal); }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 15px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); cursor: pointer; font-family: inherit; transition: opacity 0.1s; }
+  .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); width: 100%; justify-content: center; padding: 14px; font-size: 16px; border-radius: var(--radius); }
+  .btn-primary:active { opacity: 0.8; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn-danger { color: var(--danger); border-color: var(--danger); background: var(--danger-light); }
+
+  /* Drink items */
+  .drink-item { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
+  .drink-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .drink-date { font-size: 14px; font-weight: 600; color: var(--text); }
+  .drink-amount { font-size: 13px; color: var(--text2); font-weight: 400; }
+  .badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 99px; }
+  .badge-blue { background: var(--blue-light); color: var(--blue-dark); }
+  .badge-teal { background: var(--teal-light); color: var(--teal-dark); }
+  .badge-amber { background: var(--amber-light); color: var(--amber-dark); }
+  .badge-gray { background: var(--gray-light); color: var(--gray-dark); }
+  .drink-note { font-size: 12px; color: var(--text2); margin-top: 6px; line-height: 1.4; }
+  .del-btn { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 2px; }
+
+  /* Filter */
+  .filter-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .filter-row select { flex: 1; }
+
+  /* Empty */
+  .empty { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: calc(80px + var(--safe-bottom) + 12px); left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: var(--bg); padding: 10px 20px; border-radius: 99px; font-size: 14px; opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 200; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Section title */
+  .section-hd { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Stats summary in history */
+  .history-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .history-metric { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
+  .history-metric-label { font-size: 11px; color: var(--text2); }
+  .history-metric-value { font-size: 18px; font-weight: 600; color: var(--text); }
+
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* PWA install hint */
+  .install-hint { background: var(--blue-light); color: var(--blue-dark); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; margin-bottom: 10px; display: flex; gap: 8px; align-items: flex-start; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <div class="header-title">🍶 주량 다이어리</div>
+      <div class="header-sub">음주 기록 & 목표 관리</div>
+    </div>
+    <div class="header-year" id="hdr-year"></div>
+  </div>
+
+  <div class="content">
+    <!-- DASHBOARD -->
+    <div id="sec-dash" class="section active">
+      <div id="install-hint" class="install-hint" style="display:none;">
+        <i class="ti ti-info-circle" style="font-size:16px; flex-shrink:0; margin-top:1px;"></i>
+        <span>Safari에서 열고 <b>공유 → 홈 화면에 추가</b>를 누르면 앱처럼 사용할 수 있어요.</span>
+      </div>
+      <div id="dash-alert"></div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">연간 목표</div>
+          <div><span class="metric-value" id="d-goal">-</span></div>
+          <div class="metric-unit">회</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">올해 술자리</div>
+          <div><span class="metric-value" id="d-count">0</span></div>
+          <div class="metric-unit">회</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">총 잔수</div>
+          <div><span class="metric-value" id="d-total">0</span></div>
+          <div class="metric-unit">잔</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="prog-row"><span class="prog-label">술자리 횟수 소진률</span><span class="prog-pct" id="d-pct-c">-</span></div>
+        <div class="prog-bar-bg"><div class="prog-bar" id="bar-c" style="width:0%;background:#378ADD;"></div></div>
+        <div class="prog-row"><span class="prog-label">총 잔수 소진률</span><span class="prog-pct" id="d-pct-d">-</span></div>
+        <div class="prog-bar-bg"><div class="prog-bar" id="bar-d" style="width:0%;background:#1D9E75;"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">월별 술자리</div>
+        <div class="chart-wrap" id="monthly-chart"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">최근 기록</div>
+        <div id="recent-list"><div class="empty">아직 기록이 없어요</div></div>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div id="sec-log" class="section">
+      <div class="card">
+        <div class="card-title">새 기록 추가</div>
+        <label class="field-label">날짜</label>
+        <input type="date" id="log-date">
+
+        <label class="field-label">술 종류</label>
+        <div class="chips" id="alc-chips">
+          <span class="chip" data-v="소주" onclick="toggleChip(this,'alc')">소주</span>
+          <span class="chip" data-v="맥주" onclick="toggleChip(this,'alc')">맥주</span>
+          <span class="chip" data-v="막걸리" onclick="toggleChip(this,'alc')">막걸리</span>
+          <span class="chip" data-v="와인" onclick="toggleChip(this,'alc')">와인</span>
+          <span class="chip" data-v="위스키" onclick="toggleChip(this,'alc')">위스키</span>
+          <span class="chip" data-v="사케" onclick="toggleChip(this,'alc')">사케</span>
+          <span class="chip" data-v="칵테일" onclick="toggleChip(this,'alc')">칵테일</span>
+          <span class="chip" data-v="기타" onclick="toggleChip(this,'alc')">기타</span>
+        </div>
+
+        <div class="form-row-2">
+          <div>
+            <label class="field-label">총 잔수</label>
+            <input type="number" id="log-amount" min="0.5" step="0.5" placeholder="예: 3" inputmode="decimal">
+          </div>
+          <div>
+            <label class="field-label">동석 인원</label>
+            <input type="number" id="log-people" min="1" step="1" placeholder="예: 4" inputmode="numeric">
+          </div>
+        </div>
+
+        <label class="field-label">안주</label>
+        <div class="chips" id="snk-chips">
+          <span class="chip" data-v="삼겹살" onclick="toggleChip(this,'snk')">삼겹살</span>
+          <span class="chip" data-v="치킨" onclick="toggleChip(this,'snk')">치킨</span>
+          <span class="chip" data-v="해산물" onclick="toggleChip(this,'snk')">해산물</span>
+          <span class="chip" data-v="두부" onclick="toggleChip(this,'snk')">두부</span>
+          <span class="chip" data-v="김치찌개" onclick="toggleChip(this,'snk')">김치찌개</span>
+          <span class="chip" data-v="마른안주" onclick="toggleChip(this,'snk')">마른안주</span>
+          <span class="chip" data-v="회" onclick="toggleChip(this,'snk')">회</span>
+          <span class="chip" data-v="고기" onclick="toggleChip(this,'snk')">고기</span>
+          <span class="chip" data-v="기타" onclick="toggleChip(this,'snk')">기타</span>
+        </div>
+
+        <label class="field-label">장소</label>
+        <input type="text" id="log-place" placeholder="예: 강남, 홍대...">
+
+        <label class="field-label">메모</label>
+        <textarea id="log-note" placeholder="분위기, 느낌, 특이사항..."></textarea>
+
+        <div style="margin-top:16px;">
+          <button class="btn btn-primary" onclick="saveLog()">
+            <i class="ti ti-check"></i> 저장하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="sec-history" class="section">
+      <div class="filter-row">
+        <select id="filter-month" onchange="renderHistory()">
+          <option value="">올해 전체</option>
+          <option value="1">1월</option><option value="2">2월</option><option value="3">3월</option>
+          <option value="4">4월</option><option value="5">5월</option><option value="6">6월</option>
+          <option value="7">7월</option><option value="8">8월</option><option value="9">9월</option>
+          <option value="10">10월</option><option value="11">11월</option><option value="12">12월</option>
+        </select>
+      </div>
+      <div class="history-summary" id="history-summary"></div>
+      <div id="history-list"><div class="empty">기록이 없어요</div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="sec-settings" class="section">
+      <div class="card">
+        <div class="card-title">연간 목표 설정</div>
+        <label class="field-label">술자리 횟수 목표 (회/년)</label>
+        <input type="number" id="goal-count" min="1" inputmode="numeric" placeholder="예: 52">
+        <label class="field-label">총 잔수 목표 (잔/년)</label>
+        <input type="number" id="goal-drinks" min="1" inputmode="numeric" placeholder="예: 200">
+        <div style="margin-top:16px;">
+          <button class="btn btn-primary" onclick="saveGoals()">
+            <i class="ti ti-check"></i> 목표 저장
+          </button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:10px;">
+        <div class="card-title">데이터 관리</div>
+        <p style="font-size:13px; color:var(--text2); margin-bottom:12px;">데이터는 이 기기의 브라우저에 저장됩니다.</p>
+        <button class="btn btn-sm btn-danger" onclick="clearAll()">
+          <i class="ti ti-trash"></i> 전체 초기화
+        </button>
+      </div>
+
+      <div class="card" style="margin-top:10px;">
+        <div class="card-title">홈 화면 추가 방법</div>
+        <p style="font-size:13px; color:var(--text2); line-height:1.6;">
+          <b>iPhone / iPad</b><br>Safari에서 공유 버튼 → <b>홈 화면에 추가</b><br><br>
+          <b>Android</b><br>Chrome 메뉴(⋮) → <b>앱 설치</b> 또는 <b>홈 화면에 추가</b>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('dash')">
+      <i class="ti ti-chart-bar"></i>대시보드
+    </button>
+    <button class="nav-item" onclick="switchTab('log')">
+      <i class="ti ti-plus-circle"></i>기록 추가
+    </button>
+    <button class="nav-item" onclick="switchTab('history')">
+      <i class="ti ti-calendar"></i>기록 목록
+    </button>
+    <button class="nav-item" onclick="switchTab('settings')">
+      <i class="ti ti-settings"></i>설정
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const LKEY = { logs: 'dklogs_v1', goals: 'dkgoals_v1' };
+let logs = [], goals = { count: null, drinks: null };
+let selAlc = [], selSnk = [];
+const tabs = ['dash','log','history','settings'];
+
+function load() {
+  try { const v = localStorage.getItem(LKEY.logs); if (v) logs = JSON.parse(v); } catch(e) {}
+  try { const v = localStorage.getItem(LKEY.goals); if (v) goals = JSON.parse(v); } catch(e) {}
+}
+function save() {
+  localStorage.setItem(LKEY.logs, JSON.stringify(logs));
+  localStorage.setItem(LKEY.goals, JSON.stringify(goals));
+}
+
+function switchTab(name) {
+  tabs.forEach(t => {
+    document.getElementById('sec-' + t).classList.toggle('active', t === name);
+    document.querySelectorAll('.nav-item')[tabs.indexOf(t)].classList.toggle('active', t === name);
+  });
+  if (name === 'dash') renderDash();
+  if (name === 'history') renderHistory();
+  if (name === 'settings') loadGoalForm();
+  window.scrollTo(0, 0);
+}
+
+function toggleChip(el, type) {
+  const v = el.dataset.v;
+  const arr = type === 'alc' ? selAlc : selSnk;
+  const cls = type === 'alc' ? 'selected-alc' : 'selected-snk';
+  if (arr.includes(v)) { arr.splice(arr.indexOf(v), 1); el.classList.remove(cls); }
+  else { arr.push(v); el.classList.add(cls); }
+}
+
+function today() { return new Date().toISOString().slice(0, 10); }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function saveLog() {
+  const date = document.getElementById('log-date').value || today();
+  const amount = parseFloat(document.getElementById('log-amount').value);
+  const people = parseInt(document.getElementById('log-people').value) || null;
+  const place = document.getElementById('log-place').value.trim();
+  const note = document.getElementById('log-note').value.trim();
+  if (!amount || amount <= 0) { toast('잔수를 입력해 주세요'); return; }
+  if (!selAlc.length) { toast('술 종류를 선택해 주세요'); return; }
+  logs.unshift({ id: Date.now(), date, alcohol: [...selAlc], amount, people, snacks: [...selSnk], place, note });
+  save();
+  ['log-date','log-amount','log-people','log-place','log-note'].forEach(id => document.getElementById(id).value = '');
+  selAlc = []; selSnk = [];
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected-alc','selected-snk'));
+  document.getElementById('log-date').value = today();
+  toast('저장되었습니다 ✓');
+  setTimeout(() => switchTab('dash'), 600);
+}
+
+function saveGoals() {
+  goals.count = parseInt(document.getElementById('goal-count').value) || null;
+  goals.drinks = parseInt(document.getElementById('goal-drinks').value) || null;
+  save();
+  toast('목표가 저장되었습니다 ✓');
+  renderDash();
+}
+function loadGoalForm() {
+  document.getElementById('goal-count').value = goals.count || '';
+  document.getElementById('goal-drinks').value = goals.drinks || '';
+}
+
+function thisYearLogs() {
+  const yr = new Date().getFullYear().toString();
+  return logs.filter(l => l.date.startsWith(yr));
+}
+
+function fmtAmt(v) { return v % 1 === 0 ? v : v.toFixed(1); }
+
+function renderDash() {
+  const yl = thisYearLogs();
+  const totalCount = yl.length;
+  const totalDrinks = yl.reduce((s, l) => s + (l.amount || 0), 0);
+  document.getElementById('d-goal').textContent = goals.count ?? '-';
+  document.getElementById('d-count').textContent = totalCount;
+  document.getElementById('d-total').textContent = fmtAmt(totalDrinks);
+
+  const pctC = goals.count ? Math.min(100, Math.round(totalCount / goals.count * 100)) : null;
+  const pctD = goals.drinks ? Math.min(100, Math.round(totalDrinks / goals.drinks * 100)) : null;
+  document.getElementById('d-pct-c').textContent = pctC != null ? pctC + '%' : '목표 미설정';
+  document.getElementById('d-pct-d').textContent = pctD != null ? pctD + '%' : '목표 미설정';
+  document.getElementById('bar-c').style.width = (pctC ?? 0) + '%';
+  document.getElementById('bar-d').style.width = (pctD ?? 0) + '%';
+
+  const al = document.getElementById('dash-alert');
+  if (pctC != null && pctC >= 90) al.innerHTML = '<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i> 연간 목표의 ' + pctC + '%에 도달했어요!</div>';
+  else al.innerHTML = '';
+
+  const months = Array(12).fill(0);
+  yl.forEach(l => { months[parseInt(l.date.slice(5,7))-1]++; });
+  const max = Math.max(...months, 1);
+  const lbls = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+  const now = new Date().getMonth();
+  document.getElementById('monthly-chart').innerHTML = months.map((v, i) => {
+    const h = Math.max(2, Math.round((v / max) * 64));
+    return `<div class="chart-col">
+      <div class="chart-val">${v > 0 ? v : ''}</div>
+      <div class="chart-bar" style="height:${h}px;background:${i===now?'#1D9E75':'#B5D4F4'};"></div>
+      <div class="chart-lbl">${lbls[i]}</div>
+    </div>`;
+  }).join('');
+
+  const recent = yl.slice(0, 3);
+  document.getElementById('recent-list').innerHTML = recent.length
+    ? recent.map(l => itemHTML(l, false)).join('')
+    : '<div class="empty">아직 기록이 없어요</div>';
+}
+
+function itemHTML(l, showDel) {
+  const alcB = l.alcohol.map(a => `<span class="badge badge-blue">${a}</span>`).join('');
+  const snkB = (l.snacks||[]).map(s => `<span class="badge badge-teal">${s}</span>`).join('');
+  const plcB = l.place ? `<span class="badge badge-gray">${l.place}</span>` : '';
+  const pepB = l.people ? `<span class="badge badge-amber">${l.people}명</span>` : '';
+  return `<div class="drink-item">
+    <div class="drink-item-header">
+      <div>
+        <div class="drink-date">${l.date}</div>
+        <div class="drink-amount">${fmtAmt(l.amount)}잔</div>
+      </div>
+      ${showDel ? `<button class="del-btn" onclick="deleteLog(${l.id})"><i class="ti ti-trash"></i></button>` : ''}
+    </div>
+    <div class="badges">${alcB}${snkB}${plcB}${pepB}</div>
+    ${l.note ? `<div class="drink-note">${l.note}</div>` : ''}
+  </div>`;
+}
+
+function renderHistory() {
+  const mf = document.getElementById('filter-month').value;
+  const yr = new Date().getFullYear().toString();
+  let items = logs.filter(l => l.date.startsWith(yr));
+  if (mf) items = items.filter(l => parseInt(l.date.slice(5,7)) === parseInt(mf));
+
+  const totalD = items.reduce((s,l) => s + (l.amount||0), 0);
+  document.getElementById('history-summary').innerHTML = items.length ? `
+    <div class="history-metric"><div class="history-metric-label">술자리 횟수</div><div class="history-metric-value">${items.length}회</div></div>
+    <div class="history-metric"><div class="history-metric-label">총 잔수</div><div class="history-metric-value">${fmtAmt(totalD)}잔</div></div>
+  ` : '';
+  document.getElementById('history-list').innerHTML = items.length
+    ? items.map(l => itemHTML(l, true)).join('')
+    : '<div class="empty">기록이 없어요</div>';
+}
+
+function deleteLog(id) {
+  if (!confirm('이 기록을 삭제할까요?')) return;
+  logs = logs.filter(l => l.id !== id);
+  save();
+  renderHistory();
+}
+
+function clearAll() {
+  if (!confirm('모든 기록과 목표를 초기화할까요?')) return;
+  logs = []; goals = { count: null, drinks: null };
+  save();
+  renderDash();
+  toast('초기화되었습니다');
+}
+
+// PWA install hint on iOS Safari
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.navigator.standalone;
+if (isIOS && !isStandalone) {
+  document.getElementById('install-hint').style.display = 'flex';
+}
+
+document.getElementById('hdr-year').textContent = new Date().getFullYear() + '년';
+document.getElementById('log-date').value = today();
+load();
+renderDash();
+</script>
+</body>
+</html>
